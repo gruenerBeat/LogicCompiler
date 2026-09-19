@@ -1,0 +1,35 @@
+$use "ZFC.loc";
+
+Set naturals := AOI();
+Set nWo0 := naturals\{/0};
+Map succ: naturals -> naturals := (x |-> {x});
+Map pred: nWo0 -> naturals := (x |-> m#x | m#naturals);
+Map nthSucc: naturals, naturals -> naturals := (x, y |-> y = /0? x : succ(nthSucc(x, pred(y))));
+
+Set nCrossN := naturals x naturals;
+Map +: nCrossN -> naturals := ((x, y) |-> nthSucc(x, y));
+Map *: nCrossN -> naturals := ((x, y) |-> x = {/0}? y : y = {/0}? x : x + (x * pred(y)));
+
+~define "NAT"(n) := naturals(nthSucc(/0, n));
+
+Relation(nCrossN (a, b), nCrossN (c, d)) integerER :<=> {a + d = b + c};
+Set integers := nCrossN / integerER;
+Map NZEmbed: naturals \-> integers := (x |-> [(x, 0)]);
+Set zCrossZ := integers x integers;
+Map       +: zCrossZ -> integers := (([(a, b)], [(c, d)]) |-> [(a + c, b + d)]);
+Map *: zCrossZ -> integers := (([(a, b)], [(c, d)]) |-> [(a * c + b * d, a * d + b * c)]);
+Map -: zCrossZ -> integers := (([(a, b)], [(c, d)]) |-> [(a + d, b + c)]);
+
+~define "INT"(n) := integers(n = 0 ? [(0, 0)] : n > 0 ? [(n, 0)] : [(0, n]);
+
+Set zWo0 := integers\{[(0, 0)]};
+Relation(zCrossZ (a, b), zWo0 (c, d)) rationalER :<=> {a * d = c * b};
+Set rationals := (zCrossZ x zWo0) / rationalER;
+Map ZQEmbed: integers \-> rationals := (x |-> [(x, 1)]);
+Set qCrossQ := rationals x rationals;
+Map +: qCrossQ -> rationals := (([(a, b)], [(c, d)]) |-> [(a + c, b * d)]);
+Map -: qCrossQ -> rationals := (([(a, b)], [(c, d)]) |-> [(a - c, b * d)]);
+Map *: qCrossQ -> rationals := (([(a, b)], [(c, d)]) |-> [(a * c, b * d)]);
+Map /: qCrossQ -> rationals := (([(a, b)], [(c, d)]) |-> [(a * d, b * c)]);
+
+~define "RAT"(p, q) := rationals([(p, q)]);

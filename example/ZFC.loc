@@ -1,0 +1,20 @@
+Axiom AOER :<=> {.Ax,y: (x#y | x!#y <=> isset(x) & isset(y))};
+
+Axiom AOEE(-> m) :<=> {.Em: .Ax: x!#m};
+$macro /0 := AOEE();
+
+Axiom AOPS(x, y -> m) :<=> {.Em: (x#m & y#m)};
+
+Axiom AOUS(x -> m) :<=> {.Em: .Ay: .Az: [z#y & y#x] => z#m};
+
+Axiom AOR :<=> {(.Ax#X: .E!y#Y: R(x, y)) <=> isset(R(X))};
+
+Axiom AOPoS(x -> m) :<=> {.Em: .Ay: (y#m <=> y_<m)};
+$macro P(x) := AOPoS(x);
+
+Axiom AOI(-> N) :<=> {.EN: (.Ax: x#N => {x}#N) & /0#N};
+
+Axiom AOC(x -> m) :<=> {(.Aa#x: !(a=/0) & (.Aa,b#x: a^b=/0) => (.Em: .Aa#x: .E!b#a: b#m)};
+
+Axiom AOF :<=> {.Ax: !(x=/0) <=> (.Ey#x: x^y=/0)};
+
